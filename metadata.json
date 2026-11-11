@@ -1,0 +1,6 @@
+{
+  "name": "APLEX - Sports & Casino",
+  "description": "Next-generation sports betting and live casino platform with real-time odds, live video streaming, and instant mobile home screen installation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
