@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>APLEX - Sports, Casino & Admin</title>
+  <meta name="description" content="Next-generation sports betting and live casino platform with real-time odds, live video streaming, and instant mobile home screen installation.">
+  <meta name="theme-color" content="#06180f">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="APLEX">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <!-- Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-base: #06180f;
+      --bg-surface: #0b2418;
+      --bg-card: #0e2d1f;
+      --primary: #00e676;
+      --primary-cyan: #00f5d4;
+      --primary-grad: linear-gradient(90deg, #10422d 0%, #176646 100%);
+      --text: #ffffff;
+      --text-muted: #8aa396;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(0, 230, 118, 0.4);
+      --radius: 16px;
+      --drawer-top: #15222e;
+      --drawer-bot: #0d161f;
+      --danger: #ff334b;
+      --accent-gold: #ffb703;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg-base); color: var(--text); padding-bottom: 74px; overflow-x: hidden; min-height: 100vh; }
+    
+    /* SCROLLBAR HIDING */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* HEADER */
+    header { position: sticky; top: 0; z-index: 100; background: rgba(6,24,15,0.96); backdrop-filter: blur(10px); display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); height: 60px; }
+    .brand-logo { display: flex; align-items: center; gap: 8px; font-size: 19px; font-weight: 900; letter-spacing: 1.5px; color: #fff; cursor: pointer; text-transform: uppercase; }
+    .brand-logo svg { width: 28px; height: 28px; filter: drop-shadow(0 0 8px rgba(0,230,118,0.5)); }
+    .header-logged-out { display: flex; align-items: center; gap: 10px; }
+    .btn-login { background: none; border: none; color: #fff; font-weight: 700; font-size: 13px; cursor: pointer; padding: 6px 10px; }
+    .btn-signup { background: var(--primary); color: #041009; border: none; padding: 8px 16px; border-radius: 10px; font-weight: 800; font-size: 13px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,230,118,0.25); }
+    .header-logged-in { display: none; align-items: center; gap: 10px; }
+    .balance-box { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.1; cursor: pointer; }
+    .balance-title { font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); }
+    .balance-amount { font-size: 13px; font-weight: 800; color: var(--primary); }
+    .user-pill { background: rgba(0,0,0,0.4); border: 1px solid var(--border); border-radius: 20px; padding: 4px 8px 4px 4px; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .user-avatar-circle { width: 28px; height: 28px; border-radius: 50%; background: #184431; display: flex; align-items: center; justify-content: center; color: #bbf7d0; font-size: 12px; }
+    .btn-header-install { display: flex; align-items: center; gap: 5px; background: rgba(0,230,118,0.15); border: 1px solid rgba(0,230,118,0.3); color: var(--primary); font-size: 11px; font-weight: 800; padding: 6px 12px; border-radius: 20px; cursor: pointer; }
+    @media (max-width: 600px) { .btn-header-install span { display: none; } }
+
+    /* CONTAINER */
+    .container { max-width: 480px; margin: 0 auto; padding: 12px; display: flex; flex-direction: column; gap: 14px; }
+    .view-panel { display: none; flex-direction: column; gap: 14px; }
+    .view-panel.active-view { display: flex; }
+
+    /* PROMO BANNER */
+    .promo-banner { position: relative; overflow: hidden; background: linear-gradient(135deg, #0a3824 0%, #04160c 100%); border-radius: var(--radius); padding: 16px; border: 1px solid rgba(0,230,118,0.25); display: flex; justify-content: space-between; align-items: center; gap: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+    .promo-tag { display: inline-flex; align-items: center; gap: 4px; font-size: 9px; font-weight: 900; background: rgba(0,230,118,0.2); color: var(--primary); border: 1px solid rgba(0,230,118,0.3); padding: 2px 7px; border-radius: 20px; margin-bottom: 4px; text-transform: uppercase; }
+    .btn-promo-install { background: var(--primary); color: #041009; border: none; padding: 8px 14px; border-radius: 10px; font-weight: 900; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; shrink: 0; box-shadow: 0 4px 14px rgba(0,230,118,0.3); }
+
+    /* HUB CARD */
+    .hub-card { background: var(--primary-grad); border-radius: var(--radius); padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 1px solid rgba(255,255,255,0.06); }
+    .hub-header { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 800; }
+    .pills-row { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .pills-row::-webkit-scrollbar { display: none; }
+    .hub-pill-btn { background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); color: #fff; padding: 7px 12px; border-radius: 8px; font-size: 11px; font-weight: 600; white-space: nowrap; display: flex; align-items: center; gap: 6px; cursor: pointer; }
+
+    /* SECTION TITLE */
+    .section-title { font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: space-between; }
+    .live-pulse { width: 8px; height: 8px; background: var(--primary); border-radius: 50%; display: inline-block; animation: pulse 1.4s infinite ease-in-out; }
+    @keyframes pulse { 0% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.15); } 100% { opacity: 0.4; transform: scale(0.9); } }
+
+    /* MATCH CARD & MULTI-SELECTION ODDS BUTTONS */
+    .match-card { background: var(--bg-card); border-radius: var(--radius); padding: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s; }
+    .match-card:hover { border-color: rgba(0,230,118,0.3); }
+    .odds-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .odd-btn { background: rgba(0,0,0,0.35); border: 1px solid var(--border); border-radius: 10px; padding: 8px 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; }
+    .odd-btn:hover { border-color: var(--primary); background: rgba(0,230,118,0.1); }
+    .odd-btn.selected { background: var(--primary) !important; color: #041009 !important; border-color: var(--primary) !important; font-weight: 900; box-shadow: 0 0 12px rgba(0,230,118,0.45); transform: scale(1.02); }
+    .odd-btn.selected .odd-lbl { color: #041009 !important; }
+    .odd-btn.selected .odd-val { color: #041009 !important; }
+    .odd-lbl { font-size: 9px; color: var(--text-muted); font-weight: 700; }
+    .odd-val { font-size: 13px; font-weight: 900; font-family: monospace; }
+
+    /* CASINO VIEW */
+    .casino-search { display: flex; align-items: center; gap: 10px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px 14px; }
+    .casino-search input { background: transparent; border: none; outline: none; color: #fff; font-size: 13px; flex: 1; }
+    .provider-chip { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 6px 12px; font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .provider-chip.active { border-color: var(--primary); color: #fff; background: #0f3826; }
+    .c-filters { display: flex; gap: 8px; overflow-x: auto; }
+    .c-filter-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 20px; padding: 6px 14px; font-size: 11px; font-weight: 700; color: var(--text-muted); white-space: nowrap; cursor: pointer; }
+    .c-filter-btn.active { background: var(--primary); color: #041009; }
+    .casino-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .game-card { height: 135px; border-radius: var(--radius); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 10px; background-size: cover; background-position: center; border: 1px solid var(--border); cursor: pointer; transition: transform 0.2s; }
+    .game-card:hover { transform: scale(1.02); border-color: var(--primary); }
+    .game-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.95) 100%); }
+    .game-card .t { position: relative; font-size: 12px; font-weight: 800; z-index: 2; }
+    .game-card .p { position: relative; font-size: 9px; color: var(--primary); text-transform: uppercase; font-weight: 700; z-index: 2; }
+
+    /* FLOATING BET SLIP BAR (MINIMIZED) */
+    .floating-betslip-bar { position: fixed; bottom: 74px; left: 12px; right: 12px; max-width: 480px; margin: 0 auto; z-index: 950; background: #0b291b; border: 1px solid var(--border-active); border-radius: 16px; padding: 10px 14px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.8); backdrop-filter: blur(8px); cursor: pointer; animation: slideUp 0.2s ease-out; }
+    .betslip-count-badge { width: 22px; height: 22px; border-radius: 50%; background: var(--primary); color: #041009; font-weight: 900; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+
+    /* SLIDE-UP BET SLIP SHEET (EXPANDED) */
+    .betslip-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 2800; display: none; flex-direction: column; justify-content: flex-end; }
+    .betslip-overlay.active { display: flex; }
+    .betslip-sheet { background: #0c261a; border-top: 2px solid var(--primary); border-top-left-radius: 28px; border-top-right-radius: 28px; width: 100%; max-width: 500px; margin: 0 auto; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 -10px 40px rgba(0,0,0,0.8); animation: slideUpSheet 0.25s ease-out; }
+    @keyframes slideUpSheet { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    .sheet-handle { width: 44px; height: 5px; background: rgba(255,255,255,0.2); border-radius: 4px; margin: 10px auto 6px auto; }
+    .betslip-legs-list { overflow-y: auto; padding: 10px 14px; display: flex; flex-direction: column; gap: 8px; max-height: 38vh; }
+    .betslip-leg-card { background: #06170f; border: 1px solid var(--border); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; }
+    .btn-remove-leg { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 50%; background: rgba(255,255,255,0.06); border: none; color: #8aa396; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 11px; }
+    .btn-remove-leg:hover { color: #ff334b; }
+
+    /* FLOATING CHAT & BOTTOM NAV */
+    .floating-chat-bubble { position: fixed; bottom: 84px; left: 16px; width: 46px; height: 46px; border-radius: 50%; background: #ffd600; color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 6px 16px rgba(0,0,0,0.5); z-index: 90; cursor: pointer; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 64px; background: #061910; border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 1000; }
+    .nav-tab { display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--text-muted); font-size: 10px; font-weight: 700; cursor: pointer; border: none; background: transparent; }
+    .nav-tab i { font-size: 17px; }
+    .nav-tab.active { color: var(--primary); }
+
+    /* PROFILE DRAWER */
+    .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(5px); z-index: 2500; display: none; }
+    .drawer-overlay.active { display: block; }
+    .profile-drawer { position: fixed; top: 0; right: 0; width: 78%; max-width: 320px; height: 100%; background: var(--drawer-top); border-top-left-radius: 28px; z-index: 2600; display: flex; flex-direction: column; overflow-y: auto; transform: translateX(100%); transition: transform 0.25s ease; box-shadow: -10px 0 30px rgba(0,0,0,0.7); padding: 18px; }
+    .drawer-overlay.active .profile-drawer { transform: translateX(0); }
+
+    /* MODALS */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); z-index: 3000; display: none; justify-content: center; align-items: center; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal-card { background: #fff; color: #111827; width: 100%; max-width: 420px; border-radius: 24px; padding: 22px 20px; box-shadow: 0 20px 45px rgba(0,0,0,0.6); display: flex; flex-direction: column; gap: 12px; max-height: 90vh; overflow-y: auto; }
+    .auth-header { display: flex; justify-content: space-between; align-items: center; font-size: 18px; font-weight: 900; }
+    .close-btn { width: 32px; height: 32px; background: #f1f3f5; border-radius: 8px; border: none; color: #6b7280; cursor: pointer; font-size: 15px; }
+    .input-field { width: 100%; height: 46px; background: #edf2f7; border: 1px solid transparent; border-radius: 10px; padding: 0 14px; font-size: 13px; outline: none; }
+    .modal-submit-btn { width: 100%; height: 48px; background: #00d07e; color: #041009; font-size: 15px; font-weight: 900; border: none; border-radius: 12px; cursor: pointer; margin-top: 4px; box-shadow: 0 4px 12px rgba(0,208,126,0.3); }
+
+    /* TRANSACTION HISTORY MODAL (WITH ACTIVE, WON, LOST, REFUNDED FILTERS) */
+    .tx-filter-bar { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; }
+    .tx-tab-btn { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 10px; padding: 6px 12px; font-size: 12px; font-weight: 700; color: #475569; cursor: pointer; white-space: nowrap; display: flex; align-items: center; gap: 5px; }
+    .tx-tab-btn.active { background: #00d07e; color: #041009; border-color: #00d07e; font-weight: 900; }
+    .tx-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+    .badge-active { background: rgba(0,245,212,0.15); color: #0f766e; border: 1px solid rgba(0,245,212,0.4); padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 10px; }
+    .badge-won { background: #dcfce7; color: #15803d; border: 1px solid #86efac; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 10px; }
+    .badge-lost { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 10px; }
+    .badge-refunded { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; padding: 2px 8px; border-radius: 12px; font-weight: 800; font-size: 10px; }
+
+    /* ADMIN VIEW */
+    #adminView { display: none; background: #040f09; min-height: 100vh; width: 100%; position: fixed; inset: 0; z-index: 5000; overflow-y: auto; padding-bottom: 50px; }
+    #adminView.active-admin { display: block; }
+    .admin-header { background: #081a11; padding: 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .admin-metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 12px; }
+    .metric-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 3px; }
+    .metric-val { font-size: 18px; font-weight: 900; color: var(--primary); }
+    .admin-nav-bar { display: flex; overflow-x: auto; gap: 8px; padding: 0 12px 10px 12px; border-bottom: 1px solid var(--border); }
+    .admin-tab-btn { background: var(--bg-surface); border: 1px solid var(--border); color: var(--text-muted); padding: 7px 14px; border-radius: 8px; font-size: 11px; font-weight: 700; white-space: nowrap; cursor: pointer; }
+    .admin-tab-btn.active { background: var(--primary); color: #041009; }
+    .admin-section { padding: 12px; display: none; flex-direction: column; gap: 12px; }
+    .admin-section.active-sec { display: flex; }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="mainHeader">
+    <div class="brand-logo" onclick="switchMainView('sports')">
+      <!-- APLEX SVG Shield & Monogram Logo -->
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="aplexGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#00F5D4" />
+            <stop offset="50%" stopColor="#00E676" />
+            <stop offset="100%" stopColor="#00C853" />
+          </linearGradient>
+          <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#0e3a24" />
+            <stop offset="100%" stopColor="#05190f" />
+          </linearGradient>
+        </defs>
+        <path d="M 50 8 L 84 22 L 84 56 C 84 76, 50 94, 50 94 C 50 94, 16 76, 16 56 L 16 22 Z" fill="url(#shieldGrad)" stroke="#165b38" stroke-width="3.5"/>
+        <path d="M 50 20 L 32 72 L 42 72 L 47 57 L 53 57 L 50 44 Z" fill="url(#aplexGrad)"/>
+        <path d="M 50 20 L 68 72 L 58 72 L 53 57 L 47 57 L 50 44 Z" fill="url(#aplexGrad)" opacity="0.9"/>
+        <polygon points="50,26 55,37 50,42 45,37" fill="#ffffff"/>
+        <path d="M 43 77 L 50 82 L 57 77" stroke="#00F5D4" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span>APLEX</span>
+    </div>
+
+    <!-- Quick Install Button in Header -->
+    <button class="btn-header-install" onclick="openInstallAppModal()">
+      <i class="fa-solid fa-download"></i> <span>Install App</span>
+    </button>
+
+    <div class="header-logged-out" id="loggedOutView">
+      <button class="btn-login" onclick="openLoginModal()">Log in</button>
+      <button class="btn-signup" onclick="openSignupModal()">Sign Up</button>
+    </div>
+
+    <div class="header-logged-in" id="loggedInView">
+      <button onclick="openTransactionModal()" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; border-radius:10px; padding:6px 10px; font-size:11px; font-weight:700; cursor:pointer;">
+        <i class="fa-solid fa-receipt" style="color:var(--primary);"></i> My Bets
+      </button>
+      <div class="balance-box" onclick="openDepositModal()">
+        <span class="balance-title">Balance</span>
+        <span class="balance-amount" id="headerBalanceDisplay">0 USh</span>
+      </div>
+      <div class="user-pill" onclick="openProfileDrawer()">
+        <div class="user-avatar-circle"><i class="fa-solid fa-user"></i></div>
+        <i class="fa-solid fa-bars" style="color:var(--text-muted); font-size:13px;"></i>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container" id="mainContainer">
+    <!-- 1. SPORTSBOOK VIEW -->
+    <div class="view-panel active-view" id="sportsView">
+      <!-- Promo Banner with Real App Home Screen Download CTA -->
+      <div class="promo-banner">
+        <div>
+          <span class="promo-tag"><i class="fa-solid fa-bolt"></i> Official App</span>
+          <h2 style="font-size:17px; font-weight:900; text-transform:uppercase; color:#fff; line-height:1.2;">Add APLEX to<br>Home Screen</h2>
+          <p style="font-size:11px; color:#a9cbb9; margin-top:2px;">Fast 1-tap odds, 0% data lag & no browser bars</p>
+        </div>
+        <button class="btn-promo-install" onclick="openInstallAppModal()">
+          <i class="fa-solid fa-download"></i> Get App
+        </button>
+      </div>
+
+      <!-- Sports Categories Pills -->
+      <div class="hub-card">
+        <div class="hub-header">
+          <span>Matches</span>
+          <span style="color:var(--primary); font-size:11px; text-transform:uppercase;">LIVE Sport</span>
+        </div>
+        <div class="pills-row">
+          <button class="hub-pill-btn"><i class="fa-solid fa-futbol"></i> Football</button>
+          <button class="hub-pill-btn"><i class="fa-solid fa-baseball"></i> Tennis</button>
+          <button class="hub-pill-btn"><i class="fa-solid fa-basketball"></i> Basketball</button>
+          <button class="hub-pill-btn"><i class="fa-solid fa-hockey-puck"></i> Hockey</button>
+        </div>
+      </div>
+
+      <!-- Live Matches List -->
+      <div class="section-title">
+        <span><i class="fa-solid fa-bolt" style="color:#ff334b;"></i> Live Matches Now</span>
+        <span style="font-size:11px; color:var(--primary);" id="liveMatchCountDisplay">All (4)</span>
+      </div>
+      <div id="liveMatchesContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
+
+      <!-- Casino Banner Card -->
+      <div class="hub-card" style="background:linear-gradient(90deg, #0e3b28 0%, #155d3e 100%); cursor:pointer;" onclick="switchMainView('casino')">
+        <div class="hub-header">
+          <span>APLEX VIP Casino</span>
+          <span style="color:var(--primary); font-size:11px;">PLAY LIVE &rarr;</span>
+        </div>
+        <p style="font-size:11px; color:#a9cbb9;">1,200+ certified slots, Spribe Aviator crash game & live roulette.</p>
+      </div>
+    </div>
+
+    <!-- 2. CASINO VIEW -->
+    <div class="view-panel" id="casinoView">
+      <div class="casino-search">
+        <i class="fa-solid fa-magnifying-glass" style="color:var(--text-muted); font-size:13px;"></i>
+        <input type="text" id="casinoSearchInput" onkeyup="filterCasinoGames()" placeholder="Search slots, Aviator, roulette..." />
+      </div>
+
+      <div class="section-title" style="font-size:12px; color:var(--text-muted);">TOP PROVIDERS</div>
+      <div class="pills-row">
+        <div class="provider-chip active" onclick="selectProvider('all', this)">All</div>
+        <div class="provider-chip" onclick="selectProvider('pragmatic', this)"><i class="fa-solid fa-crown"></i> Pragmatic Play</div>
+        <div class="provider-chip" onclick="selectProvider('spribe', this)"><i class="fa-solid fa-plane"></i> Spribe (Aviator)</div>
+        <div class="provider-chip" onclick="selectProvider('evolution', this)"><i class="fa-solid fa-diamond"></i> Evolution</div>
+        <div class="provider-chip" onclick="selectProvider('netent', this)"><i class="fa-solid fa-dice-d20"></i> NetEnt</div>
+      </div>
+
+      <div class="section-title"><span><i class="fa-solid fa-fire" style="color:#ffb300;"></i> Hot & Trending Games</span></div>
+      <div class="casino-grid-2col" id="casinoGrid"></div>
+    </div>
+  </main>
+
+  <!-- FLOATING MINIMIZED BET SLIP BAR -->
+  <div class="floating-betslip-bar" id="floatingBetSlipBar" onclick="openBetSlipSheet()">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <div class="betslip-count-badge" id="floatingSlipBadge">1</div>
+      <div>
+        <div style="font-size:12px; font-weight:800; color:#fff;" id="floatingSlipTitle">Bet Slip (1 Selection)</div>
+        <div style="font-size:10px; color:var(--text-muted);">Total Odds: <b style="color:var(--primary);" id="floatingSlipOdds">1.45</b></div>
+      </div>
+    </div>
+    <button style="background:var(--primary); color:#041009; border:none; padding:6px 14px; border-radius:10px; font-weight:900; font-size:12px; cursor:pointer;">
+      View Slip <i class="fa-solid fa-chevron-up"></i>
+    </button>
+  </div>
+
+  <!-- EXPANDED SLIDE-UP BET SLIP SHEET -->
+  <div class="betslip-overlay" id="betSlipSheetOverlay" onclick="closeBetSlipSheetOnOutside(event)">
+    <div class="betslip-sheet">
+      <div class="sheet-handle" onclick="closeBetSlipSheet()"></div>
+      <div style="padding:10px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <span style="font-size:14px; font-weight:900; color:#fff;">Bet Slip</span>
+          <span style="font-size:11px; color:var(--primary); font-weight:800; margin-left:6px;" id="slipHeaderCount">0 Picks</span>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button onclick="clearAllSelections()" style="background:none; border:none; color:#ff334b; font-size:12px; font-weight:700; cursor:pointer;">Clear All</button>
+          <button onclick="closeBetSlipSheet()" style="background:none; border:none; color:#8aa396; font-size:15px; cursor:pointer;"><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+      </div>
+
+      <!-- Mode Switcher -->
+      <div style="display:flex; padding:8px 16px; gap:8px;">
+        <button id="btnModeAcca" onclick="setBetSlipMode('acca')" style="flex:1; padding:6px; background:var(--primary); color:#041009; border:none; border-radius:8px; font-size:11px; font-weight:800; cursor:pointer;">Accumulator</button>
+        <button id="btnModeSingle" onclick="setBetSlipMode('single')" style="flex:1; padding:6px; background:rgba(255,255,255,0.06); color:#fff; border:none; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">Singles</button>
+      </div>
+
+      <!-- Acca Boost Tag -->
+      <div id="accaBoostBanner" style="margin:0 16px; background:#04160c; border:1px solid rgba(0,230,118,0.3); border-radius:10px; padding:6px 10px; font-size:11px; color:var(--primary); display:none; justify-content:space-between; align-items:center;">
+        <span><i class="fa-solid fa-bolt"></i> <span id="accaBoostText">Acca Bonus</span></span>
+        <span style="font-weight:900;" id="accaBoostVal">+5% Extra Cash</span>
+      </div>
+
+      <!-- Selected Match Legs List -->
+      <div class="betslip-legs-list" id="betSlipLegsList"></div>
+
+      <!-- Bet Slip Form & Payout Details -->
+      <form onsubmit="event.preventDefault(); submitBetSlip();" style="background:#06170f; border-top:1px solid var(--border); padding:14px 16px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+          <span>Stake (USh)</span>
+          <span>Balance: <b style="color:#fff;" id="slipUserBalance">0 USh</b></span>
+        </div>
+        <input type="number" id="slipStakeInput" value="5000" min="500" step="500" onkeyup="recalcPayout()" onchange="recalcPayout()" class="input-field" style="background:#0c261a; color:#fff; font-weight:800; font-size:14px;" required />
+        
+        <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:6px;">
+          <button type="button" onclick="setSlipPreset(1000)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:5px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">1k</button>
+          <button type="button" onclick="setSlipPreset(5000)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:5px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">5k</button>
+          <button type="button" onclick="setSlipPreset(10000)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:5px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">10k</button>
+          <button type="button" onclick="setSlipPreset(25000)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:5px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">25k</button>
+          <button type="button" onclick="setSlipPreset(50000)" style="background:rgba(255,255,255,0.06); border:1px solid var(--border); color:#fff; padding:5px; border-radius:6px; font-size:10px; font-weight:700; cursor:pointer;">50k</button>
+        </div>
+
+        <div style="background:#081e13; border:1px solid rgba(0,230,118,0.2); border-radius:10px; padding:10px; display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:12px; color:var(--text-muted);">Potential Return:</span>
+          <span style="font-size:16px; font-weight:900; color:var(--primary);" id="slipPotentialWin">0 USh</span>
+        </div>
+
+        <button type="submit" class="modal-submit-btn" id="slipSubmitBtn">Place Bet &bull; 5,000 USh</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- FLOATING CHAT -->
+  <div class="floating-chat-bubble" onclick="openChatModal()"><i class="fa-solid fa-comment-dots"></i></div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-tab active" id="tabNavSports" onclick="switchMainView('sports')"><i class="fa-solid fa-receipt"></i><span>Sports</span></button>
+    <button class="nav-tab" id="tabNavCasino" onclick="switchMainView('casino')"><i class="fa-solid fa-circle-dot"></i><span>Casino</span></button>
+    <button class="nav-tab" onclick="openBetSlipSheet()"><i class="fa-solid fa-receipt" style="color:var(--primary);"></i><span style="color:var(--primary);">Slip (<b id="navSlipCount">0</b>)</span></button>
+    <button class="nav-tab" onclick="openDepositModal()"><i class="fa-solid fa-wallet"></i><span>Deposit</span></button>
+    <button class="nav-tab" onclick="openInstallAppModal()"><i class="fa-solid fa-download"></i><span>App</span></button>
+    <button class="nav-tab" onclick="openProfileDrawer()"><i class="fa-solid fa-bars"></i><span>More</span></button>
+  </nav>
+
+  <!-- ========================================== -->
+  <!-- MODALS: INSTALL, TRANSACTIONS, AUTH, DEPOSIT -->
+  <!-- ========================================== -->
+
+  <!-- 1. REAL APP HOME SCREEN DOWNLOAD MODAL -->
+  <div class="modal-overlay" id="installModal" onclick="closeOnOutside(event, 'installModal')">
+    <div class="modal-card" style="background:#0c261a; color:#fff; border:1px solid rgba(0,230,118,0.3);">
+      <div class="auth-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-shield-halved" style="color:var(--primary); font-size:22px;"></i>
+          <span>Download APLEX App</span>
+        </div>
+        <button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- App Tile Preview -->
+      <div style="background:#06170f; border:1px solid var(--border); border-radius:14px; padding:12px; display:flex; align-items:center; gap:12px;">
+        <div style="width:50px; height:50px; border-radius:12px; background:#092b1b; border:2px solid var(--primary); display:flex; align-items:center; justify-content:center; color:var(--primary); font-size:24px;">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <div>
+          <div style="font-weight:900; font-size:14px;">APLEX Official App</div>
+          <div style="font-size:11px; color:var(--text-muted);">Real Home Screen App &bull; ★ 4.9</div>
+          <div style="font-size:10px; color:var(--primary);"><i class="fa-solid fa-check"></i> 0 MB Storage &bull; Fast Live Odds</div>
+        </div>
+      </div>
+
+      <!-- Tabs: Android vs iOS -->
+      <div style="display:flex; gap:8px; background:#06170f; padding:4px; border-radius:10px;">
+        <button id="btnTabAndroid" onclick="switchInstallTab('android')" style="flex:1; padding:7px; border:none; border-radius:8px; font-size:12px; font-weight:800; background:var(--primary); color:#041009; cursor:pointer;">Android / Chrome</button>
+        <button id="btnTabIOS" onclick="switchInstallTab('ios')" style="flex:1; padding:7px; border:none; border-radius:8px; font-size:12px; font-weight:700; background:transparent; color:#8aa396; cursor:pointer;">iPhone / Safari</button>
+      </div>
+
+      <!-- Android Flow -->
+      <div id="installAndroidSec" style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:12px; color:#d1e0d7; line-height:1.4;">Install the real APLEX app directly to your home screen with 1 tap.</p>
+        <button onclick="triggerPWAInstall()" class="modal-submit-btn" style="background:var(--primary); color:#041009; font-weight:900;">
+          <i class="fa-solid fa-download"></i> Install APLEX on Home Screen
+        </button>
+        <div style="font-size:11px; color:var(--text-muted); border-top:1px solid var(--border); pt-2;">Or tap Chrome menu (⋮) &rarr; "Install app" / "Add to Home screen".</div>
+      </div>
+
+      <!-- iOS Flow -->
+      <div id="installIOSSec" style="display:none; flex-direction:column; gap:8px; font-size:12px; color:#d1e0d7;">
+        <div style="background:#06170f; padding:10px; border-radius:10px; display:flex; gap:10px; align-items:center;">
+          <span style="width:24px; height:24px; border-radius:6px; background:var(--primary); color:#041009; font-weight:900; display:flex; align-items:center; justify-content:center;">1</span>
+          <span>Tap the <b>Share</b> button <i class="fa-solid fa-arrow-up-from-bracket" style="color:#00e676;"></i> in the Safari toolbar.</span>
+        </div>
+        <div style="background:#06170f; padding:10px; border-radius:10px; display:flex; gap:10px; align-items:center;">
+          <span style="width:24px; height:24px; border-radius:6px; background:var(--primary); color:#041009; font-weight:900; display:flex; align-items:center; justify-content:center;">2</span>
+          <span>Scroll down and select <b>"Add to Home Screen"</b> <i class="fa-regular fa-square-plus" style="color:#00e676;"></i>.</span>
+        </div>
+        <div style="background:#06170f; padding:10px; border-radius:10px; display:flex; gap:10px; align-items:center;">
+          <span style="width:24px; height:24px; border-radius:6px; background:var(--primary); color:#041009; font-weight:900; display:flex; align-items:center; justify-content:center;">3</span>
+          <span>Tap <b>"Add"</b> in the top right. APLEX is now on your real home screen!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. TRANSACTION HISTORY MODAL (WITH ACTIVE, WON, LOST, REFUNDED FILTERS) -->
+  <div class="modal-overlay" id="txHistoryModal" onclick="closeOnOutside(event, 'txHistoryModal')">
+    <div class="modal-card">
+      <div class="auth-header">
+        <span>Transaction History</span>
+        <button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Financial Metrics Summary -->
+      <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; text-align:center;">
+        <div style="background:#f1f5f9; padding:8px; border-radius:10px;">
+          <span style="font-size:9px; color:#64748b; text-transform:uppercase; display:block;">Total Staked</span>
+          <b style="font-size:12px; color:#0f172a;" id="metricStaked">145,000 USh</b>
+        </div>
+        <div style="background:#f1f5f9; padding:8px; border-radius:10px;">
+          <span style="font-size:9px; color:#64748b; text-transform:uppercase; display:block;">Won Payouts</span>
+          <b style="font-size:12px; color:#16a34a;" id="metricPayouts">237,250 USh</b>
+        </div>
+        <div style="background:#f1f5f9; padding:8px; border-radius:10px;">
+          <span style="font-size:9px; color:#64748b; text-transform:uppercase; display:block;">Win Ratio</span>
+          <b style="font-size:12px; color:#d97706;" id="metricWinRatio">67%</b>
+        </div>
+      </div>
+
+      <!-- FILTER TABS: All, Active, Won, Lost, Refunded -->
+      <div class="tx-filter-bar">
+        <button class="tx-tab-btn active" onclick="filterTransactions('All', this)">All (<span id="countAll">5</span>)</button>
+        <button class="tx-tab-btn" onclick="filterTransactions('Active', this)">Active (<span id="countActive">1</span>)</button>
+        <button class="tx-tab-btn" onclick="filterTransactions('Won', this)">Won (<span id="countWon">2</span>)</button>
+        <button class="tx-tab-btn" onclick="filterTransactions('Lost', this)">Lost (<span id="countLost">1</span>)</button>
+        <button class="tx-tab-btn" onclick="filterTransactions('Refunded', this)">Refunded (<span id="countRefunded">1</span>)</button>
+      </div>
+
+      <!-- Tickets List -->
+      <div id="txListContainer" style="display:flex; flex-direction:column; gap:10px; max-height:50vh; overflow-y:auto;"></div>
+    </div>
+  </div>
+
+  <!-- 3. SIGN UP MODAL (STRICT EMAIL VALIDATION & DUPLICATE PREVENTION) -->
+  <div class="modal-overlay" id="signupModal" onclick="closeOnOutside(event, 'signupModal')">
+    <div class="modal-card">
+      <div class="auth-header"><span>Sign Up</span><button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+      <form class="form-group" onsubmit="event.preventDefault(); handleSignUp();" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="text" class="input-field" placeholder="Your name" id="inputName" required />
+        <input type="email" class="input-field" placeholder="Email (e.g. user@gmail.com)" id="signupEmailInput" required />
+        <input type="password" class="input-field" placeholder="Password" id="signupPasswordInput" required minlength="6" />
+        <label style="display:flex; align-items:center; gap:8px; font-size:12px; color:#4b5563;"><input type="checkbox" required /> I accept terms & 18+ policy</label>
+        <button type="submit" class="modal-submit-btn">Create APLEX Account</button>
+      </form>
+      <div style="text-align:center; font-size:12px; color:#6b7280;">Already have an account? <a onclick="openLoginModal()" style="color:#00d07e; font-weight:700; cursor:pointer;">Log in</a></div>
+    </div>
+  </div>
+
+  <!-- 4. LOG IN MODAL (STRICT EMAIL & ADMIN CHECK: darc88543@gmail.com / Darcid@123) -->
+  <div class="modal-overlay" id="loginModal" onclick="closeOnOutside(event, 'loginModal')">
+    <div class="modal-card">
+      <div class="auth-header"><span>Log in</span><button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+      <form class="form-group" onsubmit="event.preventDefault(); handleLogin();" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="email" class="input-field" id="loginEmailInput" placeholder="Enter your email" required />
+        <input type="password" class="input-field" id="loginPasswordInput" placeholder="Password" required />
+        <div style="text-align:right;"><a onclick="openForgotPassModal()" style="font-size:12px; color:#6b7280; text-decoration:none; cursor:pointer;">Forgot your password?</a></div>
+        <button type="submit" class="modal-submit-btn">Log in</button>
+      </form>
+      <div style="text-align:center; font-size:12px; color:#6b7280;">Don't have an account? <a onclick="openSignupModal()" style="color:#00d07e; font-weight:700; cursor:pointer;">Sign Up</a></div>
+    </div>
+  </div>
+
+  <!-- 5. FORGOT PASSWORD (GMAIL CODE VERIFICATION) -->
+  <div class="modal-overlay" id="forgotPassModal" onclick="closeOnOutside(event, 'forgotPassModal')">
+    <div class="modal-card">
+      <div class="auth-header"><span>Password Recovery</span><button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+      <form id="forgotStep1" onsubmit="event.preventDefault(); sendGmailVerificationCode();" style="display:flex; flex-direction:column; gap:10px;">
+        <p style="font-size:12px; color:#6b7280;">Enter your registered email address. We will send a 6-digit verification code to your Gmail inbox.</p>
+        <input type="email" class="input-field" id="forgotEmailInput" placeholder="Enter registered email" required />
+        <button type="submit" class="modal-submit-btn">Send Verification Code</button>
+      </form>
+      <form id="forgotStep2" style="display:none; flex-direction:column; gap:10px;" onsubmit="event.preventDefault(); verifyCodeAndReset();">
+        <div style="background:#eefdf3; border:1px solid #bbf7d0; padding:10px; border-radius:8px; font-size:12px; color:#166534;"><i class="fa-solid fa-check"></i> Code sent to your Gmail inbox!</div>
+        <input type="text" maxlength="6" class="input-field" id="verifyCodeInput" placeholder="Enter 6-digit code" required style="letter-spacing:4px; font-weight:800; text-align:center;" />
+        <input type="password" class="input-field" id="newPasswordInput" placeholder="Enter new password" required minlength="6" />
+        <button type="submit" class="modal-submit-btn">Reset Password & Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. DEPOSIT MODAL -->
+  <div class="modal-overlay" id="depositModal" onclick="closeOnOutside(event, 'depositModal')">
+    <div class="modal-card">
+      <div class="auth-header"><span>Deposit</span><button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button></div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <div id="methodMTN" onclick="selectPaymentMethod('mtn')" style="border:2px solid #00d07e; background:rgba(0,208,126,0.06); border-radius:12px; padding:10px; text-align:center; cursor:pointer;">
+          <b style="color:#000; background:#ffcc00; padding:2px 8px; border-radius:8px;">MTN</b><div style="font-size:11px; font-weight:700; margin-top:4px;">MTN MoMo</div>
+        </div>
+        <div id="methodAirtel" onclick="selectPaymentMethod('airtel')" style="border:2px solid #e2e8f0; border-radius:12px; padding:10px; text-align:center; cursor:pointer;">
+          <b style="color:#fff; background:#e60000; padding:2px 8px; border-radius:8px;">airtel</b><div style="font-size:11px; font-weight:700; margin-top:4px;">Airtel Money</div>
+        </div>
+      </div>
+      <form onsubmit="event.preventDefault(); processDeposit();" style="display:flex; flex-direction:column; gap:10px;">
+        <input type="tel" class="input-field" id="depositPhoneInput" placeholder="770 123-456" required />
+        <input type="number" class="input-field" id="depositAmountInput" value="10000" min="500" required />
+        <button type="submit" class="modal-submit-btn" id="depositBtnText">Deposit 10,000 USh</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. CASINO GAME PLAYER MODAL -->
+  <div class="modal-overlay" id="gamePlayerModal" onclick="closeOnOutside(event, 'gamePlayerModal')">
+    <div class="modal-card" style="background:#0c261a; color:#fff; border:1px solid rgba(0,230,118,0.3); max-width:460px;">
+      <div class="auth-header">
+        <span id="gamePlayerTitle">Game Title</span>
+        <button class="close-btn" onclick="closeAllModals()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div style="height:180px; background:#04140b; border-radius:16px; border:1px solid var(--border); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; position:relative;">
+        <div id="gameStageContent" style="font-size:32px;">🎰 💎 7️⃣ 🍒</div>
+        <div id="gameWinResult" style="font-size:13px; font-weight:800; color:var(--primary);">Certified Provably Fair RNG</div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div><span style="font-size:10px; color:#8aa396;">Balance:</span> <b id="gamePlayerBalance">0 USh</b></div>
+        <button onclick="playCasinoSpin()" class="modal-submit-btn" style="width:auto; padding:0 24px;">Spin (2,000 USh)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE DRAWER -->
+  <div class="drawer-overlay" id="profileDrawerOverlay" onclick="closeProfileDrawerOnOutside(event)">
+    <div class="profile-drawer">
+      <div style="width:68px; height:68px; border-radius:50%; background:#00d07e; color:#041009; font-size:32px; font-weight:900; display:flex; align-items:center; justify-content:center; margin:10px auto;">1</div>
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-size:14px; font-weight:900; color:#fff;" id="drawerUserName">Guest Player</div>
+        <div style="font-size:11px; color:#8aa396;" id="drawerUserEmail">Sign in to save bets</div>
+      </div>
+      <div style="background:#121827; border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; font-size:12px;"><span style="color:#8aa396;">Balance</span><b style="color:#fff;" id="drawerBalance">0 USh</b></div>
+        <button onclick="openDepositModal()" style="background:#00d07e; color:#041009; border:none; padding:8px; border-radius:8px; font-weight:900; cursor:pointer;">Deposit</button>
+      </div>
+      <div style="display:flex; flex-direction:column; font-size:13px; color:#edf2f7; divide-y:1px solid rgba(255,255,255,0.06);">
+        <div onclick="openInstallAppModal(); closeProfileDrawer();" style="padding:10px 0; color:var(--primary); font-weight:800; cursor:pointer;"><i class="fa-solid fa-download"></i> Install APLEX to Home Screen</div>
+        <div onclick="openTransactionModal(); closeProfileDrawer();" style="padding:10px 0; cursor:pointer;"><i class="fa-solid fa-receipt"></i> Transaction History</div>
+        <div onclick="openBetSlipSheet(); closeProfileDrawer();" style="padding:10px 0; cursor:pointer;"><i class="fa-solid fa-ticket"></i> Active Bet Slip</div>
+        <div onclick="openAdminDashboard(); closeProfileDrawer();" style="padding:10px 0; color:#00f5d4; font-weight:800; cursor:pointer;"><i class="fa-solid fa-shield-halved"></i> Super Admin Suite</div>
+        <div onclick="logout();" style="padding:10px 0; color:#ff5252; cursor:pointer;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Exit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN VIEW (SUPER ADMIN ACCESS: darc88543@gmail.com / Darcid@123) -->
+  <div id="adminView">
+    <div class="admin-header">
+      <div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px; font-weight:900; color:var(--primary);">APLEX</span>
+          <span style="background:var(--danger); color:#fff; font-size:10px; font-weight:900; padding:2px 8px; border-radius:6px;">ADMIN CONTROL</span>
+        </div>
+        <div style="font-size:11px; color:var(--text-muted);"><span class="live-pulse"></span> Super Admin Session Active</div>
+      </div>
+      <div style="display:flex; gap:8px;">
+        <button onclick="closeAdminDashboard()" style="background:#00d07e; color:#041009; border:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">View Site</button>
+        <button onclick="logoutAdmin()" style="background:var(--danger); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-weight:800; font-size:11px; cursor:pointer;">Exit</button>
+      </div>
+    </div>
+
+    <div class="admin-metrics-grid">
+      <div class="metric-card"><span class="metric-val" id="metricOnline">342</span><span style="font-size:11px; color:#8aa396;">People Online Now</span></div>
+      <div class="metric-card"><span class="metric-val" id="metricUsers">12,894</span><span style="font-size:11px; color:#8aa396;">Total App Users</span></div>
+      <div class="metric-card"><span class="metric-val">48.2M USh</span><span style="font-size:11px; color:#8aa396;">Total Volume Today</span></div>
+      <div class="metric-card"><span class="metric-val" id="metricActiveMatches">4</span><span style="font-size:11px; color:#8aa396;">Active Matches</span></div>
+    </div>
+
+    <div class="admin-nav-bar">
+      <button class="admin-tab-btn active" onclick="switchAdminTab('adminUsers', this)">Users & Bans</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('adminMatches', this)">Edit Match Odds</button>
+      <button class="admin-tab-btn" onclick="switchAdminTab('adminVideo', this)">Add Video Match</button>
+    </div>
+
+    <!-- Admin Tab 1: Users & Bans -->
+    <div class="admin-section active-sec" id="adminUsers">
+      <div style="background:var(--bg-card); padding:12px; border-radius:12px; border:1px solid var(--border);">
+        <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Registered Users</div>
+        <div id="adminUsersList"></div>
+      </div>
+    </div>
+
+    <!-- Admin Tab 2: Edit Match Odds -->
+    <div class="admin-section" id="adminMatches">
+      <div style="background:var(--bg-card); padding:12px; border-radius:12px; border:1px solid var(--border);">
+        <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Live Score & Odds Real-Time Controls</div>
+        <div id="adminMatchEditorList" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- Admin Tab 3: Add Video Match -->
+    <div class="admin-section" id="adminVideo">
+      <div style="background:var(--bg-card); padding:12px; border-radius:12px; border:1px solid var(--border);">
+        <div style="font-size:13px; font-weight:800; margin-bottom:8px;">Embed Live Stream Match</div>
+        <form onsubmit="event.preventDefault(); submitVideoMatch();" style="display:flex; flex-direction:column; gap:8px;">
+          <input type="text" class="input-field" id="newMatchLeague" placeholder="League (e.g. Champions League)" required style="background:#06170f; color:#fff;" />
+          <input type="text" class="input-field" id="newMatchTeams" placeholder="Teams (e.g. Bayern vs Inter)" required style="background:#06170f; color:#fff;" />
+          <input type="text" class="input-field" id="newMatchVideo" placeholder="Live Video Embed URL" style="background:#06170f; color:#fff;" />
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+            <input type="number" step="0.01" class="input-field" id="newOdd1" value="1.85" style="background:#06170f; color:#fff; text-align:center;" />
+            <input type="number" step="0.01" class="input-field" id="newOddX" value="3.40" style="background:#06170f; color:#fff; text-align:center;" />
+            <input type="number" step="0.01" class="input-field" id="newOdd2" value="4.20" style="background:#06170f; color:#fff; text-align:center;" />
+          </div>
+          <button type="submit" class="modal-submit-btn">Broadcast Match</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT APP ARCHITECTURE -->
+  <script>
+    // State
+    let currentBalance = 0;
+    let selectedPayment = 'mtn';
+    let deferredPrompt = null;
+    let betSlipSelections = [];
+    let betSlipMode = 'acca';
+    let generatedVerifyCode = null;
+    let pendingResetEmail = null;
+
+    // Users Database
+    let usersList = [
+      { id: 101, name: "Kato Ivan", email: "kato.ivan@gmail.com", password: "Password123", phone: "+256 772 109283", banned: false },
+      { id: 102, name: "Mwesigwa Ronald", email: "ronald.mwe@yahoo.com", password: "Password123", phone: "+256 752 491029", banned: false },
+      { id: 103, name: "Sarah Nansubuga", email: "sarah.n@gmail.com", password: "Password123", phone: "+256 701 391024", banned: false }
+    ];
+
+    // Live Matches Database
+    let liveMatches = [
+      { id: 1, league: "Premier League", team1: "Arsenal", team2: "Chelsea", score1: 2, score2: 1, minute: 68, odd1: 1.45, oddX: 4.20, odd2: 6.80, videoUrl: "" },
+      { id: 2, league: "La Liga", team1: "Real Madrid", team2: "Barcelona", score1: 3, score2: 2, minute: 81, odd1: 1.20, oddX: 5.10, odd2: 11.0, videoUrl: "" },
+      { id: 3, league: "Champions League", team1: "Bayern Munich", team2: "Inter Milan", score1: 2, score2: 0, minute: 52, odd1: 1.35, oddX: 5.00, odd2: 8.50, videoUrl: "" },
+      { id: 4, league: "Uganda Premier League", team1: "Vipers SC", team2: "KCCA FC", score1: 1, score2: 0, minute: 63, odd1: 1.95, oddX: 3.10, odd2: 3.80, videoUrl: "" }
+    ];
+
+    // Transaction History Database (Filtered: Active, Won, Lost, Refunded)
+    let transactionHistory = [
+      {
+        id: "APX-982140",
+        date: "Today, 14:15",
+        status: "Active",
+        stake: 15000,
+        odds: 5.64,
+        payout: 84600,
+        type: "4-Leg Acca",
+        legs: ["Arsenal vs Chelsea (1 @ 1.45)", "Real Madrid vs Barca (1 @ 1.20)", "Bayern vs Inter (1 @ 1.35)", "Vipers vs KCCA (1 @ 1.95)"],
+        cashout: 22400
+      },
+      {
+        id: "APX-974211",
+        date: "Yesterday, 21:30",
+        status: "Won",
+        stake: 20000,
+        odds: 4.80,
+        payout: 96000,
+        type: "2-Leg Acca",
+        legs: ["Man City vs Liverpool (Draw @ 3.40)", "Juventus vs Milan (Under 2.5 @ 1.41)"]
+      },
+      {
+        id: "APX-961045",
+        date: "09 Nov 2026",
+        status: "Won",
+        stake: 50000,
+        odds: 1.85,
+        payout: 92500,
+        type: "Single",
+        legs: ["Vipers SC vs SC Villa (Vipers Win @ 1.85)"]
+      },
+      {
+        id: "APX-953820",
+        date: "08 Nov 2026",
+        status: "Lost",
+        stake: 10000,
+        odds: 14.20,
+        payout: 0,
+        type: "3-Leg Acca",
+        legs: ["Chelsea vs Spurs (Spurs Win @ 3.10)", "Dortmund vs Leipzig (Dortmund Win @ 2.10)", "Marseille vs Lyon (Marseille @ 2.18)"]
+      },
+      {
+        id: "APX-934509",
+        date: "05 Nov 2026",
+        status: "Refunded",
+        stake: 25000,
+        odds: 1.00,
+        payout: 25000,
+        type: "Single",
+        legs: ["Atletico vs Sevilla - Postponed Weather (Refunded)"]
+      }
+    ];
+
+    // Casino Games Database
+    let casinoGamesList = [
+      { id: "c1", title: "Sweet Bonanza 1000", provider: "Pragmatic Play", category: "Slots", bg: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?auto=format&fit=crop&w=300&q=80" },
+      { id: "c2", title: "Gates of Olympus 1000", provider: "Pragmatic Play", category: "Slots", bg: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?auto=format&fit=crop&w=300&q=80" },
+      { id: "c3", title: "Aviator Crash", provider: "Spribe (Aviator)", category: "Crash", bg: "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&w=300&q=80" },
+      { id: "c4", title: "Sugar Rush 1000", provider: "Pragmatic Play", category: "Slots", bg: "https://images.unsplash.com/photo-1511193311914-0346f16efe90?auto=format&fit=crop&w=300&q=80" }
+    ];
+
+    // PWA Prompt Detection
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderUserMatches();
+      renderCasinoGames();
+      renderTransactions('All');
+      renderAdminUsers();
+      renderAdminMatches();
+    });
+
+    // 1. RENDER MATCHES & ODDS
+    function renderUserMatches() {
+      const container = document.getElementById('liveMatchesContainer');
+      container.innerHTML = liveMatches.map(m => {
+        const isSel1 = betSlipSelections.some(s => s.matchId === m.id && s.pick === '1');
+        const isSelX = betSlipSelections.some(s => s.matchId === m.id && s.pick === 'X');
+        const isSel2 = betSlipSelections.some(s => s.matchId === m.id && s.pick === '2');
+
+        return `
+          <div class="match-card">
+            <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--text-muted);">
+              <span style="font-weight:700; color:#bbf7d0;">${m.league} &bull; 2nd Half</span>
+              <span style="color:#ff334b; font-weight:800;"><span class="live-pulse" style="background:#ff334b;"></span> ${m.minute}'</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:3px; font-weight:800; font-size:14px;">
+              <div style="display:flex; justify-content:space-between;"><span>${m.team1}</span><span style="color:var(--primary);">${m.score1}</span></div>
+              <div style="display:flex; justify-content:space-between;"><span>${m.team2}</span><span style="color:var(--primary);">${m.score2}</span></div>
+            </div>
+            ${m.videoUrl ? `<iframe src="${m.videoUrl}" style="width:100%; height:160px; border-radius:10px; border:none;" allowfullscreen></iframe>` : ''}
+            <div class="odds-row">
+              <button class="odd-btn ${isSel1 ? 'selected' : ''}" onclick="toggleBetSelection(${m.id}, '1', '${m.team1} Win', ${m.odd1})">
+                <span class="odd-lbl">1 ${isSel1 ? '✓' : ''}</span>
+                <span class="odd-val">${m.odd1.toFixed(2)}</span>
+              </button>
+              <button class="odd-btn ${isSelX ? 'selected' : ''}" onclick="toggleBetSelection(${m.id}, 'X', 'Draw', ${m.oddX})">
+                <span class="odd-lbl">X ${isSelX ? '✓' : ''}</span>
+                <span class="odd-val">${m.oddX.toFixed(2)}</span>
+              </button>
+              <button class="odd-btn ${isSel2 ? 'selected' : ''}" onclick="toggleBetSelection(${m.id}, '2', '${m.team2} Win', ${m.odd2})">
+                <span class="odd-lbl">2 ${isSel2 ? '✓' : ''}</span>
+                <span class="odd-val">${m.odd2.toFixed(2)}</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 2. MULTI-SELECTION BET SLIP LOGIC
+    function toggleBetSelection(matchId, pick, label, odd) {
+      const match = liveMatches.find(m => m.id === matchId);
+      if (!match) return;
+
+      const existingIndex = betSlipSelections.findIndex(s => s.matchId === matchId);
+      if (existingIndex > -1) {
+        if (betSlipSelections[existingIndex].pick === pick) {
+          betSlipSelections.splice(existingIndex, 1);
+        } else {
+          betSlipSelections[existingIndex] = { matchId, league: match.league, matchTitle: `${match.team1} vs ${match.team2}`, pick, label, odd };
+        }
+      } else {
+        betSlipSelections.push({ matchId, league: match.league, matchTitle: `${match.team1} vs ${match.team2}`, pick, label, odd });
+      }
+
+      renderUserMatches();
+      updateBetSlipUI();
+    }
+
+    function removeBetSelection(matchId) {
+      betSlipSelections = betSlipSelections.filter(s => s.matchId !== matchId);
+      renderUserMatches();
+      updateBetSlipUI();
+    }
+
+    function clearAllSelections() {
+      betSlipSelections = [];
+      renderUserMatches();
+      updateBetSlipUI();
+      closeBetSlipSheet();
+    }
+
+    function updateBetSlipUI() {
+      const count = betSlipSelections.length;
+      document.getElementById('navSlipCount').innerText = count;
+
+      const bar = document.getElementById('floatingBetSlipBar');
+      if (count > 0) {
+        bar.style.display = 'flex';
+        document.getElementById('floatingSlipBadge').innerText = count;
+        document.getElementById('floatingSlipTitle').innerText = count === 1 ? 'Bet Slip (1 Selection)' : `Bet Slip (${count} Selections)`;
+        const totalOdds = betSlipSelections.reduce((acc, s) => acc * s.odd, 1).toFixed(2);
+        document.getElementById('floatingSlipOdds').innerText = totalOdds;
+      } else {
+        bar.style.display = 'none';
+      }
+
+      // Update Sheet
+      document.getElementById('slipHeaderCount').innerText = `${count} Selection${count === 1 ? '' : 's'}`;
+      document.getElementById('slipUserBalance').innerText = `${currentBalance.toLocaleString()} USh`;
+
+      const listContainer = document.getElementById('betSlipLegsList');
+      if (count === 0) {
+        listContainer.innerHTML = `<div style="text-align:center; padding:20px; color:#8aa396; font-size:12px;">Bet slip is empty. Click match odds to add!</div>`;
+      } else {
+        listContainer.innerHTML = betSlipSelections.map(s => `
+          <div class="betslip-leg-card">
+            <button class="btn-remove-leg" onclick="removeBetSelection(${s.matchId})">&times;</button>
+            <span style="font-size:9px; color:var(--primary); font-weight:800; text-transform:uppercase;">${s.league}</span>
+            <div style="font-size:12px; font-weight:800; color:#fff;">${s.matchTitle}</div>
+            <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.06); padding-top:4px;">
+              <span style="font-size:11px; color:#a9cbb9;">Pick: <b>${s.label}</b></span>
+              <span style="font-size:13px; font-weight:900; color:var(--primary); font-family:monospace;">${s.odd.toFixed(2)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Acca Boost calculation
+      const boostBanner = document.getElementById('accaBoostBanner');
+      if (count >= 2 && betSlipMode === 'acca') {
+        boostBanner.style.display = 'flex';
+        let pct = count === 2 ? 3 : count === 3 ? 7 : count === 4 ? 12 : 20;
+        document.getElementById('accaBoostVal').innerText = `+${pct}% Acca Boost`;
+      } else {
+        boostBanner.style.display = 'none';
+      }
+
+      recalcPayout();
+    }
+
+    function recalcPayout() {
+      const stake = parseInt(document.getElementById('slipStakeInput').value) || 0;
+      let totalOdds = betSlipSelections.reduce((acc, s) => acc * s.odd, 1);
+      let count = betSlipSelections.length;
+      let bonusPct = count >= 2 && betSlipMode === 'acca' ? (count === 2 ? 3 : count === 3 ? 7 : count === 4 ? 12 : 20) : 0;
+      let ret = Math.round(stake * totalOdds * (1 + bonusPct / 100));
+
+      document.getElementById('slipPotentialWin').innerText = `${ret.toLocaleString()} USh`;
+      document.getElementById('slipSubmitBtn').innerText = `Place Bet \u2022 ${stake.toLocaleString()} USh`;
+    }
+
+    function setSlipPreset(amt) {
+      document.getElementById('slipStakeInput').value = amt;
+      recalcPayout();
+    }
+
+    function setBetSlipMode(mode) {
+      betSlipMode = mode;
+      document.getElementById('btnModeAcca').style.background = mode === 'acca' ? 'var(--primary)' : 'rgba(255,255,255,0.06)';
+      document.getElementById('btnModeAcca').style.color = mode === 'acca' ? '#041009' : '#fff';
+      document.getElementById('btnModeSingle').style.background = mode === 'single' ? 'var(--primary)' : 'rgba(255,255,255,0.06)';
+      document.getElementById('btnModeSingle').style.color = mode === 'single' ? '#041009' : '#fff';
+      updateBetSlipUI();
+    }
+
+    function submitBetSlip() {
+      if (betSlipSelections.length === 0) {
+        alert("Please select at least 1 match.");
+        return;
+      }
+      const stake = parseInt(document.getElementById('slipStakeInput').value) || 5000;
+      if (stake > currentBalance) {
+        alert(`Insufficient balance (${currentBalance.toLocaleString()} USh)! Please deposit first.`);
+        openDepositModal();
+        return;
+      }
+
+      currentBalance -= stake;
+      updateBalanceDisplay();
+
+      const totalOdds = parseFloat(betSlipSelections.reduce((acc, s) => acc * s.odd, 1).toFixed(2));
+      const newTx = {
+        id: `APX-${Math.floor(100000 + Math.random() * 900000)}`,
+        date: "Today, Just now",
+        status: "Active",
+        stake: stake,
+        odds: totalOdds,
+        payout: Math.round(stake * totalOdds),
+        type: betSlipSelections.length > 1 ? `${betSlipSelections.length}-Leg Acca` : "Single",
+        legs: betSlipSelections.map(s => `${s.matchTitle} (${s.label} @ ${s.odd})`),
+        cashout: Math.round(stake * 0.95)
+      };
+
+      transactionHistory.unshift(newTx);
+      alert(`Bet placed successfully! Ticket ID: ${newTx.id}`);
+      clearAllSelections();
+    }
+
+    function openBetSlipSheet() {
+      updateBetSlipUI();
+      document.getElementById('betSlipSheetOverlay').classList.add('active');
+    }
+    function closeBetSlipSheet() {
+      document.getElementById('betSlipSheetOverlay').classList.remove('active');
+    }
+    function closeBetSlipSheetOnOutside(e) {
+      if (e.target.id === 'betSlipSheetOverlay') closeBetSlipSheet();
+    }
+
+    // 3. TRANSACTION HISTORY FILTER SYSTEM (ACTIVE, WON, LOST, REFUNDED)
+    function openTransactionModal() {
+      closeAllModals();
+      renderTransactions('All');
+      document.getElementById('txHistoryModal').classList.add('active');
+    }
+
+    function filterTransactions(status, btn) {
+      document.querySelectorAll('.tx-tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      renderTransactions(status);
+    }
+
+    function renderTransactions(filterStatus) {
+      const container = document.getElementById('txListContainer');
+      const filtered = transactionHistory.filter(tx => filterStatus === 'All' || tx.status === filterStatus);
+
+      // Counters
+      document.getElementById('countAll').innerText = transactionHistory.length;
+      document.getElementById('countActive').innerText = transactionHistory.filter(t => t.status === 'Active').length;
+      document.getElementById('countWon').innerText = transactionHistory.filter(t => t.status === 'Won').length;
+      document.getElementById('countLost').innerText = transactionHistory.filter(t => t.status === 'Lost').length;
+      document.getElementById('countRefunded').innerText = transactionHistory.filter(t => t.status === 'Refunded').length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; padding:30px; color:#6b7280;">No ${filterStatus} bets found.</div>`;
+        return;
+      }
+
+      container.innerHTML = filtered.map(tx => `
+        <div class="tx-card">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <b style="color:#0f172a; font-family:monospace;">${tx.id}</b>
+              <span style="font-size:10px; color:#64748b; margin-left:6px;">${tx.date}</span>
+            </div>
+            <span class="${tx.status === 'Active' ? 'badge-active' : tx.status === 'Won' ? 'badge-won' : tx.status === 'Lost' ? 'badge-lost' : 'badge-refunded'}">
+              ${tx.status}
+            </span>
+          </div>
+          <div style="font-size:11px; color:#475569;">
+            ${tx.legs.map(l => `<div>&bull; ${l}</div>`).join('')}
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; background:#f1f5f9; padding:6px 10px; border-radius:8px; font-weight:800;">
+            <span>Stake: <b>${tx.stake.toLocaleString()} USh</b></span>
+            <span>Odds: <b>${tx.odds}x</b></span>
+            <span style="color:${tx.status === 'Won' ? '#16a34a' : tx.status === 'Lost' ? '#dc2626' : '#0f766e'};">
+              ${tx.status === 'Lost' ? '0 USh' : `${tx.payout.toLocaleString()} USh`}
+            </span>
+          </div>
+          ${tx.status === 'Active' && tx.cashout ? `
+            <div style="display:flex; justify-content:space-between; align-items:center; pt-1;">
+              <span style="font-size:11px; color:#64748b;">Early Cashout:</span>
+              <button onclick="cashoutTicket('${tx.id}', ${tx.cashout})" style="background:#ffb703; color:#000; border:none; padding:4px 10px; border-radius:6px; font-size:11px; font-weight:900; cursor:pointer;">
+                Cashout ${tx.cashout.toLocaleString()} USh
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    function cashoutTicket(txId, amt) {
+      const tx = transactionHistory.find(t => t.id === txId);
+      if (tx) {
+        tx.status = 'Won';
+        tx.payout = amt;
+        delete tx.cashout;
+        currentBalance += amt;
+        updateBalanceDisplay();
+        alert(`Cashout Successful! ${amt.toLocaleString()} USh added to your balance.`);
+        renderTransactions('Active');
+      }
+    }
+
+    // 4. PWA REAL APP INSTALL FLOW
+    function openInstallAppModal() {
+      closeAllModals();
+      closeProfileDrawer();
+      document.getElementById('installModal').classList.add('active');
+    }
+    function switchInstallTab(tab) {
+      document.getElementById('btnTabAndroid').style.background = tab === 'android' ? 'var(--primary)' : 'transparent';
+      document.getElementById('btnTabAndroid').style.color = tab === 'android' ? '#041009' : '#8aa396';
+      document.getElementById('btnTabIOS').style.background = tab === 'ios' ? 'var(--primary)' : 'transparent';
+      document.getElementById('btnTabIOS').style.color = tab === 'ios' ? '#041009' : '#8aa396';
+      document.getElementById('installAndroidSec').style.display = tab === 'android' ? 'flex' : 'none';
+      document.getElementById('installIOSSec').style.display = tab === 'ios' ? 'flex' : 'none';
+    }
+    function triggerPWAInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            alert('APLEX is installing to your home screen!');
+            closeAllModals();
+          }
+        });
+      } else {
+        alert('To install on your phone:\n1. Tap the Chrome menu (3 dots at top-right)\n2. Tap "Install app" or "Add to Home screen"');
+      }
+    }
+
+    // 5. AUTHENTICATION & ADMIN
+    function handleSignUp() {
+      const email = document.getElementById('signupEmailInput').value.trim().toLowerCase();
+      const name = document.getElementById('inputName').value.trim();
+      const pass = document.getElementById('signupPasswordInput').value;
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert('Please enter a valid email address!');
+        return;
+      }
+      if (usersList.some(u => u.email.toLowerCase() === email)) {
+        alert('This email is already registered! Please log in.');
+        openLoginModal();
+        return;
+      }
+
+      const newUser = { id: usersList.length + 101, name, email, password: pass, phone: "+256 700 000000", banned: false };
+      usersList.push(newUser);
+      alert(`Welcome to APLEX, ${name}!`);
+      completeAuth(newUser);
+    }
+
+    function handleLogin() {
+      const email = document.getElementById('loginEmailInput').value.trim().toLowerCase();
+      const pass = document.getElementById('loginPasswordInput').value;
+
+      // Super Admin Check
+      if (email === "darc88543@gmail.com" && pass === "Darcid@123") {
+        closeAllModals();
+        openAdminDashboard();
+        return;
+      }
+
+      const user = usersList.find(u => u.email.toLowerCase() === email);
+      if (!user) { alert('No account found with this email!'); return; }
+      if (user.banned) { alert('Account suspended. Contact support.'); return; }
+      if (user.password !== pass) { alert('Incorrect password! Click "Forgot your password?" if needed.'); return; }
+
+      completeAuth(user);
+    }
+
+    function sendGmailVerificationCode() {
+      const email = document.getElementById('forgotEmailInput').value.trim().toLowerCase();
+      pendingResetEmail = email;
+      generatedVerifyCode = Math.floor(100000 + Math.random() * 900000).toString();
+      alert(`[Gmail Notification - APLEX Security]\nVerification Code: ${generatedVerifyCode}\nEnter this code on the screen.`);
+      document.getElementById('forgotStep1').style.display = 'none';
+      document.getElementById('forgotStep2').style.display = 'flex';
+    }
+
+    function verifyCodeAndReset() {
+      const code = document.getElementById('verifyCodeInput').value.trim();
+      const newP = document.getElementById('newPasswordInput').value;
+      if (code !== generatedVerifyCode) { alert('Invalid 6-digit code!'); return; }
+      const u = usersList.find(item => item.email.toLowerCase() === pendingResetEmail);
+      if (u) u.password = newP;
+      alert('Password updated! You can now log in.');
+      openLoginModal();
+    }
+
+    function completeAuth(user) {
+      closeAllModals();
+      document.getElementById('loggedOutView').style.display = 'none';
+      document.getElementById('loggedInView').style.display = 'flex';
+      document.getElementById('drawerUserName').innerText = user.name;
+      document.getElementById('drawerUserEmail').innerText = user.email;
+    }
+
+    function logout() {
+      closeProfileDrawer();
+      document.getElementById('loggedInView').style.display = 'none';
+      document.getElementById('loggedOutView').style.display = 'flex';
+    }
+
+    // 6. DEPOSITS & WALLET
+    function selectPaymentMethod(m) {
+      selectedPayment = m;
+      document.getElementById('methodMTN').style.borderColor = m === 'mtn' ? '#00d07e' : '#e2e8f0';
+      document.getElementById('methodAirtel').style.borderColor = m === 'airtel' ? '#00d07e' : '#e2e8f0';
+      document.getElementById('depositPhoneInput').placeholder = m === 'mtn' ? '770 123-456 (MTN)' : '750 123-456 (Airtel)';
+    }
+
+    function processDeposit() {
+      const amt = parseInt(document.getElementById('depositAmountInput').value) || 10000;
+      const ph = document.getElementById('depositPhoneInput').value;
+      alert(`[${selectedPayment.toUpperCase()} MoMo Prompt Sent]\nEnter your PIN on phone +256 ${ph} to approve deposit of ${amt.toLocaleString()} USh.`);
+      currentBalance += amt;
+      updateBalanceDisplay();
+      closeAllModals();
+    }
+
+    function updateBalanceDisplay() {
+      const fmt = `${currentBalance.toLocaleString()} USh`;
+      document.getElementById('headerBalanceDisplay').innerText = fmt;
+      document.getElementById('drawerBalance').innerText = fmt;
+    }
+
+    // 7. CASINO & GAMES
+    function renderCasinoGames() {
+      const grid = document.getElementById('casinoGrid');
+      grid.innerHTML = casinoGamesList.map(g => `
+        <div class="game-card" style="background-image:url('${g.bg}')" onclick="openGameModal('${g.title}', '${g.provider}')">
+          <span class="t">${g.title}</span>
+          <span class="p">${g.provider}</span>
+        </div>
+      `).join('');
+    }
+
+    function openGameModal(title, provider) {
+      closeAllModals();
+      document.getElementById('gamePlayerTitle').innerText = `${title} (${provider})`;
+      document.getElementById('gamePlayerBalance').innerText = `${currentBalance.toLocaleString()} USh`;
+      document.getElementById('gamePlayerModal').classList.add('active');
+    }
+
+    function playCasinoSpin() {
+      if (currentBalance < 2000) {
+        alert('Insufficient balance to spin (2,000 USh)!');
+        return;
+      }
+      currentBalance -= 2000;
+      updateBalanceDisplay();
+      document.getElementById('gamePlayerBalance').innerText = `${currentBalance.toLocaleString()} USh`;
+      document.getElementById('gameStageContent').innerText = '🎰 ... 🎰 ... 🎰';
+
+      setTimeout(() => {
+        const win = Math.random() > 0.4;
+        if (win) {
+          const prize = 5000 + Math.floor(Math.random() * 8000);
+          currentBalance += prize;
+          updateBalanceDisplay();
+          document.getElementById('gamePlayerBalance').innerText = `${currentBalance.toLocaleString()} USh`;
+          document.getElementById('gameStageContent').innerText = '💎 🍒 💎 7️⃣';
+          document.getElementById('gameWinResult').innerText = `WINNER! +${prize.toLocaleString()} USh!`;
+        } else {
+          document.getElementById('gameStageContent').innerText = '🔔 🍋 7️⃣ 🍒';
+          document.getElementById('gameWinResult').innerText = 'Try again next spin!';
+        }
+      }, 700);
+    }
+
+    // 8. ADMIN DASHBOARD
+    function openAdminDashboard() {
+      document.getElementById('adminView').classList.add('active-admin');
+    }
+    function closeAdminDashboard() {
+      document.getElementById('adminView').classList.remove('active-admin');
+    }
+    function logoutAdmin() {
+      closeAdminDashboard();
+      logout();
+    }
+    function switchAdminTab(secId, btn) {
+      document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active-sec'));
+      document.querySelectorAll('.admin-tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(secId).classList.add('active-sec');
+      btn.classList.add('active');
+    }
+    function renderAdminUsers() {
+      const container = document.getElementById('adminUsersList');
+      container.innerHTML = usersList.map(u => `
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:12px;">
+          <div><b>${u.name}</b> (${u.email})<div style="font-size:10px; color:${u.banned ? 'red' : 'var(--primary)'};">${u.banned ? 'BANNED' : 'ACTIVE'}</div></div>
+          <button onclick="toggleUserBan(${u.id})" style="padding:4px 10px; border-radius:6px; border:none; background:${u.banned ? 'var(--primary)' : 'var(--danger)'}; color:#fff; font-size:10px; font-weight:800; cursor:pointer;">${u.banned ? 'Unban' : 'Ban'}</button>
+        </div>
+      `).join('');
+    }
+    function toggleUserBan(id) {
+      const u = usersList.find(item => item.id === id);
+      if (u) { u.banned = !u.banned; renderAdminUsers(); }
+    }
+    function renderAdminMatches() {
+      const container = document.getElementById('adminMatchEditorList');
+      container.innerHTML = liveMatches.map(m => `
+        <div style="background:#06170f; border:1px solid var(--border); border-radius:8px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+          <div style="font-size:11px; font-weight:800;">${m.team1} vs ${m.team2}</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px;">
+            <input type="number" step="0.01" value="${m.odd1}" onchange="updateMatchOdd(${m.id}, 'odd1', this.value)" style="background:#0c261a; color:#fff; border:1px solid var(--border); padding:4px; text-align:center; border-radius:6px; font-size:11px;" />
+            <input type="number" step="0.01" value="${m.oddX}" onchange="updateMatchOdd(${m.id}, 'oddX', this.value)" style="background:#0c261a; color:#fff; border:1px solid var(--border); padding:4px; text-align:center; border-radius:6px; font-size:11px;" />
+            <input type="number" step="0.01" value="${m.odd2}" onchange="updateMatchOdd(${m.id}, 'odd2', this.value)" style="background:#0c261a; color:#fff; border:1px solid var(--border); padding:4px; text-align:center; border-radius:6px; font-size:11px;" />
+          </div>
+        </div>
+      `).join('');
+    }
+    function updateMatchOdd(id, key, val) {
+      const m = liveMatches.find(item => item.id === id);
+      if (m) { m[key] = parseFloat(val) || 1.0; renderUserMatches(); }
+    }
+    function submitVideoMatch() {
+      const league = document.getElementById('newMatchLeague').value;
+      const teams = document.getElementById('newMatchTeams').value.split('vs');
+      const vUrl = document.getElementById('newMatchVideo').value;
+      liveMatches.unshift({
+        id: liveMatches.length + 1,
+        league,
+        team1: teams[0] ? teams[0].trim() : "Team 1",
+        team2: teams[1] ? teams[1].trim() : "Team 2",
+        score1: 0,
+        score2: 0,
+        minute: 1,
+        odd1: parseFloat(document.getElementById('newOdd1').value) || 1.85,
+        oddX: parseFloat(document.getElementById('newOddX').value) || 3.40,
+        odd2: parseFloat(document.getElementById('newOdd2').value) || 4.20,
+        videoUrl: vUrl
+      });
+      renderUserMatches();
+      renderAdminMatches();
+      alert('Video match broadcasted!');
+    }
+
+    // GENERAL MODAL CONTROLS
+    function closeAllModals() {
+      document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+    }
+    function closeOnOutside(e, id) {
+      if (e.target.id === id) closeAllModals();
+    }
+    function openLoginModal() { closeAllModals(); document.getElementById('loginModal').classList.add('active'); }
+    function openSignupModal() { closeAllModals(); document.getElementById('signupModal').classList.add('active'); }
+    function openForgotPassModal() { closeAllModals(); document.getElementById('forgotPassModal').classList.add('active'); }
+    function openDepositModal() { closeAllModals(); document.getElementById('depositModal').classList.add('active'); }
+    function openChatModal() { alert('APLEX 24/7 VIP Concierge Support is ready to assist you!'); }
+    function openProfileDrawer() { document.getElementById('profileDrawerOverlay').classList.add('active'); }
+    function closeProfileDrawer() { document.getElementById('profileDrawerOverlay').classList.remove('active'); }
+    function closeProfileDrawerOnOutside(e) { if (e.target.id === 'profileDrawerOverlay') closeProfileDrawer(); }
+    function switchMainView(view) {
+      document.getElementById('sportsView').classList.toggle('active-view', view === 'sports');
+      document.getElementById('casinoView').classList.toggle('active-view', view === 'casino');
+      document.getElementById('tabNavSports').classList.toggle('active', view === 'sports');
+      document.getElementById('tabNavCasino').classList.toggle('active', view === 'casino');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
